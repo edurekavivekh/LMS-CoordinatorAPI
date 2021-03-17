@@ -275,8 +275,8 @@ module.exports = {
 		 * @var {string} _app Express application instance
 		 */
         _app) {
-        if (config == null) {
 
+        if (config == null) {
 			/**
 			 * @description loading the Environment configuration if env varialble is set otherwise load the local configuration.
 			 */
@@ -327,41 +327,41 @@ module.exports = {
 
             this.config.tanents = {};
 
-            var that = this.config;//.loggers;
+            // var that = this.config.loggers;
 
-            this.config.logger = {
-                log: function () {
-                    that.loggers.info.apply(that, formatLogArguments(arguments));
-                },
-                info: function () {
-                    that.loggers.info.apply(that, formatLogArguments(arguments));
-                },
-                warn: function () {
-                    that.loggers.warn.apply(that, formatLogArguments(arguments));
-                },
-                debug: function () {
-                    that.loggers.debug.apply(that, formatLogArguments(arguments));
-                },
-                error: function () {
-                    that.loggers.error.apply(that, formatLogArguments(arguments));
-                },
-                trace: function () {
-                    that.loggers.trace.apply(that, formatLogArguments(arguments));
-                },
-                data: function () {
-                    that.loggers.data.apply(that, formatLogArguments(arguments));
-                },
-                silly: function () {
-                    that.loggers.silly.apply(that, formatLogArguments(arguments));
-                }
-            };
-
-            var thatLogger = this.config.logger;
+            // this.config.logger = {
+            //     log: () => {
+            //         that.info.apply(that, formatLogArguments(arguments));
+            //     },
+            //     info: () => {
+            //         that.info.apply(that, formatLogArguments(arguments))
+            //     },
+            //     warn: () => {
+            //         that.warn.apply(that, formatLogArguments(arguments));
+            //     },
+            //     debug: () => {
+            //         that.debug.apply(that, formatLogArguments(arguments));
+            //     },
+            //     error: () => {
+            //         that.error.apply(that, formatLogArguments(arguments));
+            //     },
+            //     trace: () => {
+            //         that.trace.apply(that, formatLogArguments(arguments));
+            //     },
+            //     data: () => {
+            //         that.data.apply(that, formatLogArguments(arguments));
+            //     },
+            //     silly: () => {
+            //         that.silly.apply(that, formatLogArguments(arguments));
+            //     }
+            // };
 
 			/**
 			 * @description Notify user regarding current setup e.g. local, development or production
 			 */
-            // this.config.logger.info("Environment Set to:", this.ename);
+            // this.config.loggers.log({ level: 'info', message: `Environment Set to:, ${this.ename}`});
+            this.config.loggers.info("Environment Set to:", this.ename);
+
 
 			/**
 			 * @description Require the database instance.

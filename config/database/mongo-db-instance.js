@@ -148,5 +148,4 @@ module.exports = {
     init: function(config) {
         return connectDB(config);
     }
-    // mongoose
 }

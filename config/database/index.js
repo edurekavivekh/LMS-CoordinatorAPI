@@ -1,9 +1,3 @@
-/**
- * @description Virtual Infrastructure Management 
- * @author  Dilip <dilip.more@bridgelabz.com>
- * @license ICS
- * @version 1.0
- */
 'use strict';
 
 /**

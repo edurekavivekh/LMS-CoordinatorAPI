@@ -1,5 +1,5 @@
 require('dotenv').config();
-require('./config/database/mongo-db-instance');
+// require('./config/database/mongo-db-instance');
 
 const express = require('express'),
     bodyParser = require('body-parser'),
@@ -40,6 +40,11 @@ app.use((err, req, res, next) => {
         }
     });
 });
+
+/**
+ * @description Winston logger derived from the config
+ */
+var logger = config.logger;
 
 // start server
 app.listen(process.env.PORT, function () {

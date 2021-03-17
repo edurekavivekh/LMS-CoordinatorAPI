@@ -34,6 +34,8 @@
     "mongoose": "^5.11.15",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.7",
-    "winston": "^3.3.3"
+    "util": "^0.12.3",
+    "winston": "^3.3.3",
+    "winston-color": "^1.0.0"
   }
 }
