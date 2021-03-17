@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken'),
 module.exports = {
     generateToken: (payload) => {
         try {
-            var token = jwt.sign(payload, process.env.TOKEN_SECRET, { expiresIn: process.env.TOKEN_LIFE });
+            var token = jwt.sign(payload, process.env.TOKEN_SECRET, { algorithm: "HS256", expiresIn: process.env.TOKEN_LIFE });
             return { auth: true, message: "Token generated", token: token }
         }
         catch (err) {
@@ -17,7 +17,8 @@ module.exports = {
         try {
             var token = req.headers['x-access-token'] || req.headers["token"] || req.params.token;
             if (!token) return res.status(401).send({ auth: false, statuscode: 401, message: 'No token provided.' });
-            jwt.verify(token, process.env.TOKEN_SECRET, async (err, decoded) => {
+
+            jwt.verify(token, new Buffer.from(process.env.TOKEN_SECRET, "base64"), { algorithms: ['HS256'], issuer: 'LMS' }, (err, decoded) => {
                 if (err) { return res.status(401).json({ auth: false, statuscode: 401, message: 'Failed to authenticate..', error: err }); }
                 req.token = decoded //token added in the request process
 

@@ -44,7 +44,7 @@ app.use((err, req, res, next) => {
 /**
  * @description Winston logger derived from the config
  */
-var logger = config.logger;
+global.logger = config.loggers;
 
 // start server
 app.listen(process.env.PORT, function () {

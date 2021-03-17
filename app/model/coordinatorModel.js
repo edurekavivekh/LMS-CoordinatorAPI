@@ -50,9 +50,28 @@ module.exports = {
 
             return coordinator.save()
                 .then(result => callback(null, result))
-                .catch(err => callback(err, null))
+                .catch(err => {
+                    logger.error("error occur in create model while doc insert")
+                    return callback(err, null)
+                })
         } catch (err) {
+            logger.error("error occur in create model catch block")
             return callback(message, null)
         }
     },
+
+    find(coordinatorData, callback) {
+        try {
+            Coordinator.find(coordinatorData, (err, data) => {
+                if (err) {
+                    logger.error("error occur in find query model callback")
+                    return callback(err, null)
+                }
+                return callback(null, data)
+            })
+        } catch (err) {
+            logger.error("error occur in find query model catch block")
+            return callback(message, null)
+        }
+    }
 }
