@@ -27,7 +27,7 @@ var coordinatorSchema = new Schema({
         default: null
     },
     createdBy: {
-        type: String,
+        type: Number,
         trim: true,
         required: true
     },
@@ -36,3 +36,23 @@ var coordinatorSchema = new Schema({
 })
 
 var Coordinator = mongoose.model('coordinators', coordinatorSchema);
+
+module.exports = {
+    create(coordinatorData, callback) {
+        try {
+            var coordinator = new Coordinator({
+                name: coordinatorData.name,
+                mobile: coordinatorData.mobile,
+                emailId: coordinatorData.emailId,
+                profileImg: coordinatorData.profileImg,
+                createdBy: coordinatorData.createdBy
+            })
+
+            return coordinator.save()
+                .then(result => callback(null, result))
+                .catch(err => callback(err, null))
+        } catch (err) {
+            return callback(message, null)
+        }
+    },
+}
