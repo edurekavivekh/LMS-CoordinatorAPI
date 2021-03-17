@@ -56,21 +56,22 @@ var winstonConfig = {
  * @description Creates the logging directory for the system, if it doesnt exists.
  */
 if (!fs.existsSync(winstonConfig.logDir)) { // Create the directory if it does not exist
-    fs.mkdirSync(winstonConfig.logDir, function (err, data) {
+    fs.mkdir(winstonConfig.logDir, function (err, data) {
         if (err) {
             console.log("Error while creating logger system directory : ", JSON.stringify(err));
         }
     });
-} else {
-    fse.emptyDir(winstonConfig.logDir, function (err, done) {
-        if (err) {
-            console.log("", err);
-        }
-        if (done) {
-            console.log('log dir: ', done);
-        }
-    });
 }
+// } else {
+//     fse.emptyDir(winstonConfig.logDir, function (err, done) {
+//         if (err) {
+//             console.log("", err);
+//         }
+//         if (done) {
+//             console.log('log dir: ', done);
+//         }
+//     });
+// }
 
 /**
  * @description Defines the color for console
@@ -197,25 +198,6 @@ function _attachExpressErrorLogger(config) {
     );
 }
 
-
-/**
- * @description Attempts to add file and line number info to the given log arguments.
- */
-function formatLogArguments(args) {
-    args = Array.prototype.slice.call(args);
-    var stackInfo = getStackInfo(1);
-    if (stackInfo) {
-        // get file path relative to project root
-        var calleeStr = '(' + stackInfo.relativePath + ':' + stackInfo.line + ')';
-        if (typeof (args[0]) === 'string') {
-            args[0] = calleeStr + ' ' + args[0];
-        } else {
-            args.unshift(calleeStr);
-        }
-    }
-    return args;
-}
-
 /**
  * @description Parses and returns info about the call stack at the given index.
  */
@@ -327,41 +309,11 @@ module.exports = {
 
             this.config.tanents = {};
 
-            // var that = this.config.loggers;
-
-            // this.config.logger = {
-            //     log: () => {
-            //         that.info.apply(that, formatLogArguments(arguments));
-            //     },
-            //     info: () => {
-            //         that.info.apply(that, formatLogArguments(arguments))
-            //     },
-            //     warn: () => {
-            //         that.warn.apply(that, formatLogArguments(arguments));
-            //     },
-            //     debug: () => {
-            //         that.debug.apply(that, formatLogArguments(arguments));
-            //     },
-            //     error: () => {
-            //         that.error.apply(that, formatLogArguments(arguments));
-            //     },
-            //     trace: () => {
-            //         that.trace.apply(that, formatLogArguments(arguments));
-            //     },
-            //     data: () => {
-            //         that.data.apply(that, formatLogArguments(arguments));
-            //     },
-            //     silly: () => {
-            //         that.silly.apply(that, formatLogArguments(arguments));
-            //     }
-            // };
-
 			/**
 			 * @description Notify user regarding current setup e.g. local, development or production
 			 */
             // this.config.loggers.log({ level: 'info', message: `Environment Set to:, ${this.ename}`});
             this.config.loggers.info("Environment Set to:", this.ename);
-
 
 			/**
 			 * @description Require the database instance.

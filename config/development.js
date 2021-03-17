@@ -75,8 +75,28 @@ module.exports = function (config) {
             ],
             'transports': [
                 new winston.transports.File({
-                    'level': 'info,error,warn',
+                    'level': 'error',
                     'filename': path.join(logDir, process.env.PROJECT_WINSTON_ERROR_LOG_FILE),
+                    'handleExceptions': true,
+                    'json': true,
+                    'prettyPrint': true,
+                    'zippedArchive': true,
+                    'colorize': 'all',
+                    'eol': '\n',
+                    'format': winston.format.combine(
+                        winston.format.timestamp({ format: () => '' + dateFormat(new Date(), 'ddd mmm d yyyy HH:MM:ss TT') + '' }),
+                        utilFormatter(),
+                        winston.format.printf(({ level, message, timestamp, ...metadata }) => {
+                            // Return string will be passed to logger.
+                            return timestamp + ' [' + level.toUpperCase() + '] - ' + (undefined !== message ? message : '') +
+                                (metadata && Object.keys(metadata).length ? '\n\t' + JSON.stringify(metadata) : '');
+                        }),
+                        winston.format.colorize({ all: true }),
+                    ),
+                }),
+                new winston.transports.File({
+                    'level': 'info',
+                    'filename': path.join(logDir, process.env.PROJECT_WINSTON_LOG_FILE),
                     'handleExceptions': true,
                     'json': true,
                     'prettyPrint': true,
