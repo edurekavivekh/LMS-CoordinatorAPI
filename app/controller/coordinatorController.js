@@ -4,25 +4,28 @@ module.exports = {
     createCoordinator(req, res, next) {
         try {
             var coordinatorData = {
-                name: req.body.name,
-                mobile: req.body.mobile,
-                emailId: req.body.emailId,
-                profileImg: req.body.profileImg,
-                createdBy: req.token.jti
+                name      : req.body.name,
+                mobile    : req.body.mobile,
+                emailId   : req.body.emailId,
+                profileImg: req.s3url,
+                createdBy : req.token.jti
             },
                 response = {};
 
+                console.log(JSON.stringify(coordinatorData));
+                
+
             services.createCoordinator(coordinatorData, (err, result) => {
                 if (err) {
-                    response.success = false
+                    response.success    = false
                     response.statuscode = err.statuscode
-                    response.message = err.message
+                    response.message    = err.message
                     logger.error("error occur in createCoordinator controller callback")
                     return res.status(err.statuscode).send(response)
                 } else {
-                    response.success = true
+                    response.success    = true
                     response.statuscode = result.statuscode
-                    response.message = result.message
+                    response.message    = result.message
 
                     return res.status(result.statuscode).send(response)
                 }

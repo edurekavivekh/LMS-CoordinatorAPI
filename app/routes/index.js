@@ -2,6 +2,7 @@ var express = require('express'),
     routes = express.Router(),
     {
         verifyToken,
+        uploadImg
     } = require('../../utility'),
     controller = require('../controller'),
     {
@@ -10,10 +11,11 @@ var express = require('express'),
     validate = require('../middleware/validate').validate;
 
 /**
- * Register API's
+ * Coordinator API's
  */
-// coordinator
+
 routes.post('/lms-coordinator/create'
+    , uploadImg
     , val_user
     , validate
     , verifyToken

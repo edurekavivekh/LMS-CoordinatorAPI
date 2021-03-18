@@ -1,4 +1,4 @@
-var model = require('../model')
+var model   = require('../model')
 var message = "Something went wrong"
 
 module.exports = {
@@ -9,20 +9,20 @@ module.exports = {
                     logger.error("error occur in createCoordinator service find query callback")
                     return callback({ message: message, statuscode: 400 }, null)
                 } else {
-                    return result.length === 0 ?
+                    return result.length == 0 ?
                         model.createCoordinator(coordinatorData, (err, result) => {
                             if (err) {
                                 logger.error("error occur in createCoordinator service callback")
                                 return callback({ message: message, statuscode: 400 }, null)
                             }
                             return callback(null, {
-                                message: `Created successfully`,
+                                message   : `Created successfully`,
                                 statuscode: 201
                             })
                         })
-                        :
+                        : 
                         callback(null, {
-                            message: `[${result[0].emailId}] user already exist`,
+                            message   : `[${result[0].emailId}] user already exist`,
                             statuscode: 409
                         })
                 }

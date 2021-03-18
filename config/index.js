@@ -309,6 +309,17 @@ module.exports = {
 
             this.config.tanents = {};
 
+            /**
+			 * @description Initializing & Updating AWS S3 Bucket, Configuration setting local directory for S3 Bucket folder
+			 */
+            this.config.awsCredentials = {
+                accessKeyId: this.config.awsConfig.accessKeyId,
+                secretAccessKey: this.config.awsConfig.secretAccessKey,
+                region: this.config.awsConfig.region,
+                s3BucketName: this.config.awsConfig.s3BucketName,
+                signatureVersion: "v4"
+            };
+
 			/**
 			 * @description Notify user regarding current setup e.g. local, development or production
 			 */
