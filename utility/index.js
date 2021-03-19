@@ -46,7 +46,7 @@ module.exports = {
                 }
                 else {
                     if (req.optional && (req.file === undefined)) {
-                        return next()
+                        return next();
                     } else if (req.file === undefined) {
                         logger.error("error occur in uploadImg utility in if condi undefined")
                         return res.status(400).send({

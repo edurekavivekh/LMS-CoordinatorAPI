@@ -1,5 +1,5 @@
-var model   = require('../model')
-var message = "Something went wrong"
+var model   = require('../model'),
+    message = "Something went wrong";
 
 module.exports = {
     createCoordinator(coordinatorData, callback) {
