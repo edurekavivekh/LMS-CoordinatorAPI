@@ -11,8 +11,6 @@ module.exports = {
                 createdBy : req.token.jti
             },
                 response = {};
-            console.log(JSON.stringify(coordinatorData));
-
 
             services.createCoordinator(coordinatorData, (err, result) => {
                 if (err) {

@@ -30,7 +30,7 @@ app.use('*/*', (req, res, next) => {
 
 app.use((err, req, res, next) => {
     console.log(err);
-    
+
     if (!err) return next();
 
     res.status(500).send({

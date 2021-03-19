@@ -9,16 +9,17 @@ var express = require('express'),
         val_user,
         val_objectId
     } = require('../../config/validator'),
-    validate = require('../middleware/validate').validate;
+    validate = require('../middleware/validate').validate,
+    upload   = require('../../config/multer');
 
 /**
  * Coordinator API's
  */
 routes.post('/lms-coordinator/create'
+    , verifyToken
     , uploadImg
     , val_user(false)
     , validate
-    , verifyToken
     , controller.createCoordinator);
 
 routes.get('/lms-coordinator/get-all-coordinators'

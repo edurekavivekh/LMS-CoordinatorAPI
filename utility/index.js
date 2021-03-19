@@ -1,7 +1,7 @@
-const jwt         = require('jsonwebtoken'),
-      message     = "Something went wrong, try again",
-      upload      = require('../config/multer'),
-      unauthorize = { success: false, statuscode: 401, message: "Unauthorized user" };
+const jwt                   = require('jsonwebtoken'),
+      message               = "Something went wrong, try again",
+      { upload, deleteImg } = require('../config/multer'),
+      unauthorize           = { success: false, statuscode: 401, message: "Unauthorized user" };
 
 module.exports = {
     generateToken: (payload) => {
@@ -41,8 +41,8 @@ module.exports = {
 
             singleUpload(req, res, (err, data) => {
                 if (err) {
-                    logger.error("error occur in uploadImg utility callback", err)
-                    return res.status(404).json({ message: "Something went wrong", statuscode: 404 })
+                    logger.error("error occur in uploadImg utility callback", err.message)
+                    return res.status(400).json({ message: err.message, statuscode: 400 })
                 }
                 else {
                     if (req.optional && (req.file === undefined)) {
@@ -61,7 +61,14 @@ module.exports = {
             })
         } catch (err) {
             logger.error("error occur in uploadImg utility catch block", err)
-            return res.status(404).json({ message: "Something went wrong", statuscode: 404 })
+            return res.status(400).json({ message: "Something went wrong", statuscode: 400 })
         }
     },
+
+    deleteImg: async (s3url) => {
+        return deleteImg(s3url, async (err, data) => {
+            if (err) logger.error("Some thing went wrong while deleting img from S3 Bucket", err)
+            else logger.info("Image deleted successfully", data)
+        })
+    }
 }

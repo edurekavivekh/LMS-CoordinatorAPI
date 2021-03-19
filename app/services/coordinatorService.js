@@ -1,5 +1,6 @@
-var model   = require('../model'),
-    message = "Something went wrong";
+var model         = require('../model'),
+    message       = "Something went wrong",
+    { deleteImg } = require('../../utility');
 
 module.exports = {
     createCoordinator(coordinatorData, callback) {
@@ -9,7 +10,7 @@ module.exports = {
                     logger.error("error occur in createCoordinator service find query callback")
                     return callback({ message: message, statuscode: 400 }, null)
                 } else {
-                    return result.length == 0 ?
+                    if (result.length === 0) {
                         model.createCoordinator(coordinatorData, (err, result) => {
                             if (err) {
                                 logger.error("error occur in createCoordinator service callback")
@@ -20,11 +21,13 @@ module.exports = {
                                 statuscode: 201
                             })
                         })
-                        : 
-                        callback(null, {
+                    } else {
+                        // deleteImg(coordinatorData.profileImg)
+                        return callback(null, {
                             message   : `[${result[0].emailId}] user already exist`,
                             statuscode: 409
                         })
+                    }
                 }
             })
         } catch (err) {
