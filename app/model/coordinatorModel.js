@@ -90,4 +90,19 @@ module.exports = {
             return callback(message, null)
         }
     },
+
+    remove(coordinatorData, callback) {
+        try {
+            Coordinator.findByIdAndDelete(coordinatorData, (err, data) => {
+                if (err) {
+                    logger.error("error occur in remove query model callback")
+                    return callback(err, null)
+                }
+                return callback(null, data)
+            })
+        } catch (err) {
+            logger.error("error occur in remove query model catch block")
+            return callback(message, null)
+        }
+    },
 }

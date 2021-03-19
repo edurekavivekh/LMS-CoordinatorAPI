@@ -12,9 +12,6 @@ module.exports = {
             },
                 response = {};
 
-            console.log(JSON.stringify(coordinatorData));
-
-
             services.createCoordinator(coordinatorData, (err, result) => {
                 if (err) {
                     response.success = false
@@ -94,6 +91,35 @@ module.exports = {
             })
         } catch (err) {
             logger.error("error occur in updateCoordinator controller catch block")
+            next(err)
+        }
+    },
+
+    removeCoordinator(req, res, next) {
+        try {
+            var coordinatorData = {
+                userId: req.token.jti,
+                coordinatorId: req.params.coordinatorId
+            },
+                response = {};
+
+            services.removeCoordinator(coordinatorData, (err, result) => {
+                if (err) {
+                    response.success = false
+                    response.statuscode = err.statuscode
+                    response.message = err.message
+                    logger.error("error occur in removeCoordinator controller callback")
+                    return res.status(err.statuscode).send(response)
+                } else {
+                    response.success = true
+                    response.statuscode = result.statuscode
+                    response.message = result.message
+
+                    return res.status(result.statuscode).send(response)
+                }
+            })
+        } catch (err) {
+            logger.error("error occur in removeCoordinator controller catch block")
             next(err)
         }
     },

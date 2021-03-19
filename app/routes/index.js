@@ -7,6 +7,7 @@ var express = require('express'),
     controller = require('../controller'),
     {
         val_user,
+        val_objectId
     } = require('../../config/validator'),
     validate = require('../middleware/validate').validate;
 
@@ -30,5 +31,11 @@ routes.put('/lms-coordinator/update-coordinator/:coordinatorId'
     , validate
     , verifyToken
     , controller.updateCoordinator);
+
+routes.delete('/lms-coordinator/remove-coordinator/:coordinatorId'
+    , val_objectId('coordinatorId')
+    , validate
+    , verifyToken
+    , controller.removeCoordinator);
 
 module.exports = routes;

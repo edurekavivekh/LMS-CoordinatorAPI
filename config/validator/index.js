@@ -27,4 +27,11 @@ module.exports = {
             .optional(optional ? true : false)
             .isEmail().withMessage('Invalid email')
     ],
+
+    val_objectId: (reqField) => [
+        checkBodyAndQuery(`${reqField}`).trim()
+            .notEmpty().withMessage(`${reqField} is a required field`)
+            .exists()
+            .isMongoId().withMessage(`Enter valid ${reqField}`)
+    ],
 }
