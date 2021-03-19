@@ -1,5 +1,5 @@
 var express = require('express'),
-    routes = express.Router(),
+    routes  = express.Router(),
     {
         verifyToken,
         uploadImg
