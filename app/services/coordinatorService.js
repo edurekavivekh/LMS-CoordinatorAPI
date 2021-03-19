@@ -9,7 +9,7 @@ module.exports = {
                     logger.error("error occur in createCoordinator service find query callback")
                     return callback({ message: message, statuscode: 400 }, null)
                 } else {
-                    return result.length == 0 ?
+                    return result.length === 0 ?
                         model.createCoordinator(coordinatorData, (err, result) => {
                             if (err) {
                                 logger.error("error occur in createCoordinator service callback")
@@ -48,6 +48,37 @@ module.exports = {
             })
         } catch (err) {
             logger.error("error occur in getCoordinators service catch block")
+            return callback({ message: message, statuscode: 404 }, null)
+        }
+    },
+
+    updateCoordinator(coordinatorData, callback) {
+        try {
+            model.findCoordinator({ _id: coordinatorData.coordinatorId }, (err, result) => {
+                if (err) {
+                    logger.error("error occur in updateCoordinator service find query callback")
+                    return callback({ message: message, statuscode: 400 }, null)
+                } else {
+                    return result.length !== 0 ?
+                        model.updateCoordinator(coordinatorData, (err, result) => {
+                            if (err) {
+                                logger.error("error occur in updateCoordinator service callback")
+                                return callback({ message: message, statuscode: 400 }, null)
+                            }
+                            return callback(null, {
+                                message: `Updated successfully`,
+                                statuscode: 201
+                            })
+                        })
+                        :
+                        callback(null, {
+                            message: `No [${coordinatorData.coordinatorId}] user found`,
+                            statuscode: 404
+                        })
+                }
+            })
+        } catch (err) {
+            logger.error("error occur in updateCoordinator service catch block")
             return callback({ message: message, statuscode: 404 }, null)
         }
     },

@@ -15,7 +15,7 @@ var express = require('express'),
  */
 routes.post('/lms-coordinator/create'
     , uploadImg
-    , val_user
+    , val_user(false)
     , validate
     , verifyToken
     , controller.createCoordinator);
@@ -24,5 +24,11 @@ routes.get('/lms-coordinator/get-all-coordinators'
     , validate
     , verifyToken
     , controller.getCoordinators);
+
+routes.put('/lms-coordinator/update-coordinator/:coordinatorId'
+    , val_user(true)
+    , validate
+    , verifyToken
+    , controller.updateCoordinator);
 
 module.exports = routes;

@@ -1,34 +1,34 @@
 var mongoose = require('mongoose'),
-    Schema   = mongoose.Schema,
-    message  = 'Something bad happaned';
+    Schema = mongoose.Schema,
+    message = 'Something bad happaned';
 
 var coordinatorSchema = new Schema({
     name: {
-        type    : String,
-        trim    : true,
+        type: String,
+        trim: true,
         required: true
     },
     mobile: {
-        type     : Number,
-        trim     : true,
-        unique   : true,
+        type: Number,
+        trim: true,
+        unique: true,
         minlength: 10,
         maxlength: 10,
-        required : true
+        required: true
     },
     emailId: {
-        type    : String,
-        trim    : true,
+        type: String,
+        trim: true,
         required: true
     },
     profileImg: {
-        type   : String,
-        trim   : true,
+        type: String,
+        trim: true,
         default: null
     },
     createdBy: {
-        type    : Number,
-        trim    : true,
+        type: Number,
+        trim: true,
         required: true
     },
 }, {
@@ -41,11 +41,11 @@ module.exports = {
     create(coordinatorData, callback) {
         try {
             var coordinator = new Coordinator({
-                name      : coordinatorData.name,
-                mobile    : coordinatorData.mobile,
-                emailId   : coordinatorData.emailId,
+                name: coordinatorData.name,
+                mobile: coordinatorData.mobile,
+                emailId: coordinatorData.emailId,
                 profileImg: coordinatorData.profileImg,
-                createdBy : coordinatorData.createdBy
+                createdBy: coordinatorData.createdBy
             })
 
             return coordinator.save()
@@ -67,10 +67,26 @@ module.exports = {
                     logger.error("error occur in find query model callback")
                     return callback(err, null)
                 }
-                return callback(data)
+                return callback(null, data)
             })
         } catch (err) {
             logger.error("error occur in find query model catch block")
+            return callback(message, null)
+        }
+    },
+
+    update(coordinatorData, callback) {
+        try {
+            Coordinator.findByIdAndUpdate({ _id: coordinatorData.coordinatorId }
+                , coordinatorData.data, { new: true }, (err, data) => {
+                    if (err) {
+                        logger.error("error occur in update query model callback")
+                        return callback(err, null)
+                    }
+                    return callback(null, data)
+                })
+        } catch (err) {
+            logger.error("error occur in update query model catch block")
             return callback(message, null)
         }
     },
