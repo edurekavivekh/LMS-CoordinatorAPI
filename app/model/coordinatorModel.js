@@ -73,5 +73,5 @@ module.exports = {
             logger.error("error occur in find query model catch block")
             return callback(message, null)
         }
-    }
+    },
 }

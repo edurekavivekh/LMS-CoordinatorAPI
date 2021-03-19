@@ -3,7 +3,7 @@ const multer = require('multer'),
     path = require('path'),
     s3 = require('./s3.config'),
     config = require('../../config').get(),
-    { s3BucketName } = config.awsCredentials;;
+    { s3BucketName } = config.awsCredentials;
 
 const imageFilter = (req, file, cb) => {
     let checkextension = (/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/).test(file.originalname)

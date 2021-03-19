@@ -1,7 +1,7 @@
-const jwt = require('jsonwebtoken'),
-    message = "Something went wrong, try again",
-    upload = require('../config/multer'),
-    unauthorize = { success: false, statuscode: 401, message: "Unauthorized user" };
+const jwt         = require('jsonwebtoken'),
+      message     = "Something went wrong, try again",
+      upload      = require('../config/multer'),
+      unauthorize = { success: false, statuscode: 401, message: "Unauthorized user" };
 
 module.exports = {
     generateToken: (payload) => {
@@ -28,9 +28,9 @@ module.exports = {
         }
         catch (err) {
             return res.status(401).json({
-                auth: false,
+                auth      : false,
                 statuscode: 401,
-                message: 'Failed to authenticate'
+                message   : 'Failed to authenticate'
             });
         }
     },
@@ -48,10 +48,11 @@ module.exports = {
                     if (req.optional && (req.file === undefined)) {
                         return next()
                     } else if (req.file === undefined) {
+                        logger.error("error occur in uploadImg utility in if condi undefined")
                         return res.status(400).send({
-                            success: false,
+                            success   : false,
                             statuscode: 400,
-                            message: req.fileValidationError
+                            message   : req.fileValidationError
                         });
                     }
                     req.s3url = req.file.location

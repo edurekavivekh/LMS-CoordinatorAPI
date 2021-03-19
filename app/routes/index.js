@@ -13,12 +13,16 @@ var express = require('express'),
 /**
  * Coordinator API's
  */
-
 routes.post('/lms-coordinator/create'
     , uploadImg
     , val_user
     , validate
     , verifyToken
     , controller.createCoordinator);
+
+routes.get('/lms-coordinator/get-all-coordinators'
+    , validate
+    , verifyToken
+    , controller.getCoordinators);
 
 module.exports = routes;
