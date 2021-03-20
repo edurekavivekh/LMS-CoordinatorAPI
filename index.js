@@ -17,6 +17,7 @@ app.use(bodyParser.json());
 app.use(morgan('dev'));
 app.disable('x-powered-by');
 app.use(cors());
+app.use(express.static(__dirname + '/public'));
 
 app.use('/', routes);
 

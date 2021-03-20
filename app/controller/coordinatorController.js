@@ -7,7 +7,7 @@ module.exports = {
                 name      : req.body.name,
                 mobile    : req.body.mobile,
                 emailId   : req.body.emailId,
-                profileImg: req.s3url,
+                profileImg: req.file,
                 createdBy : req.token.jti
             },
                 response = {};

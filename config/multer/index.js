@@ -1,46 +1,56 @@
-const multer           = require('multer'),
-      multerS3         = require('multer-s3'),
-      path             = require('path'),
-      s3               = require('./s3.config'),
-      config           = require('../../config').get(),
-      { s3BucketName } = config.awsCredentials;
+const multer = require('multer'),
+    path = require('path'),
+    config = require('../../config').get(),
+    fs = require('fs'),
+    s3 = config.awsS3Client,
+    { s3BucketName, s3ImagesLocal } = config.awsCredentials;
+
 
 const imageFilter = (req, file, cb) => {
-    let checkextension = (/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/).test(file.originalname)
-
     // Accept images only
-    if (!checkextension) {
-        req.fileValidationError = `Method accespts only images [jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF]', ['Image size should be less than 2mb], ['The file uploaded is not an image']`;
-        return cb(null, false);
+    if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
+        req.fileValidationError = 'Only image files are allowed!';
+        return cb(new Error('Only image files are allowed! [jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF], [Image size should be less than 2mb]'), false);
     }
     cb(null, true);
-}
+};
 
 var upload = multer({
     limits: {
         fileSize: 2097152  // 2MB
     },
     fileFilter: imageFilter,
-    storage   : multerS3({
-        s3    : s3,
-        bucket: s3BucketName,
-        key   : (req, file, callback) => {
-            var   album = encodeURIComponent('coordinator-profile-image');
-            const key   = `${album}/${process.env.NODE_ENV}/${Date.now().toString()}${path.extname(file.originalname)}`
-            return callback(null, key);
+    storage: multer.diskStorage({
+        destination: function (req, file, callback) {
+            callback(null, `./public/${s3ImagesLocal}`);
+        },
+        filename: function (req, file, callback) {
+            callback(null, file.originalname);
         }
     })
 });
 
-const deleteImg = async (s3url, callback) => {
-    var filename = s3url.replace(/^.*[\\\/]/, '');
-    s3.deleteObject({
-        Bucket: s3BucketName,
-        Key   : `coordinator-profile-image/development/${filename}`
-    }, function (err, data) {
-        if (err) return callback(err, null)
-        else return callback(null, data)
-    })
-}
+function uploadS3Img(file, callback) {
+    // Setting up S3 upload parameters
+    let filepath = `./public/${s3ImagesLocal}/${file}`;
+    let img = fs.createReadStream(filepath)
+    var album = encodeURIComponent('coordinator-profile-image');
+    const key = `${album}/${process.env.NODE_ENV}/${Date.now().toString()}${path.extname(file)}`
 
-module.exports = { upload: upload, deleteImg: deleteImg };
+    const params = {
+        Bucket: s3BucketName,
+        Key: key,
+        Body: img
+    };
+    // Uploading files to the bucket
+    s3.upload(params, (err, data) => {
+        if (err) {
+            logger.error("Image upload failed", err)
+            return callback(err, null)
+        }
+        logger.info("Image uploaded succesfully");
+        return callback(null, data.Location)
+    })
+};
+
+module.exports = { upload: upload, uploadS3Img: uploadS3Img };

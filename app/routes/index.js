@@ -1,8 +1,9 @@
 var express = require('express'),
-    routes  = express.Router(),
+    routes = express.Router(),
     {
         verifyToken,
-        uploadImg
+        // upload,
+        storeImg
     } = require('../../utility'),
     controller = require('../controller'),
     {
@@ -10,29 +11,31 @@ var express = require('express'),
         val_objectId
     } = require('../../config/validator'),
     validate = require('../middleware/validate').validate;
+    // config = require('../../config').get(),
+    // upload = config.upload;
 
 /**
  * Coordinator API's
  */
-routes.post('/lms-coordinator/create'
+routes.post('/coordinator/create'
     , verifyToken
-    , uploadImg
+    , storeImg
     , val_user(false)
     , validate
     , controller.createCoordinator);
 
-routes.get('/lms-coordinator/get-all-coordinators'
+routes.get('/coordinator/all-coordinators'
     , validate
     , verifyToken
     , controller.getCoordinators);
 
-routes.put('/lms-coordinator/update-coordinator/:coordinatorId'
+routes.put('/coordinator/:coordinatorId'
     , val_user(true)
     , validate
     , verifyToken
     , controller.updateCoordinator);
 
-routes.put('/lms-coordinator/remove-coordinator/:coordinatorId'
+routes.put('/coordinator/remove/:coordinatorId'
     , val_objectId('coordinatorId')
     , validate
     , verifyToken

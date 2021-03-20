@@ -49,7 +49,7 @@ module.exports = function (config) {
         },
         'awsConfig': {
             's3BucketName'   : process.env.AWS_S3_BUCKET_NAME,
-            // 's3ImagesLocal'  : process.env.AWS_S3_IMAGESLOCAL,
+            's3ImagesLocal'  : process.env.AWS_S3_IMAGESLOCAL,
             'accessKeyId'    : process.env.AWS_S3_ACCESSKEY_ID,
             'secretAccessKey': process.env.AWS_S3_SECRET_ACCESSKEY,
             'region'         : process.env.AWS_S3_REGION

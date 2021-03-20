@@ -15,6 +15,7 @@ var
     clc = require('cli-color'),
     winston = require("winston"),
     dateFormat = require('dateformat'),
+    AWS = require('aws-sdk'),
     expressWinston = require("express-winston"),
     config,
     configTanent,
@@ -22,6 +23,13 @@ var
 
 var PROJECT_ROOT = path.join(__dirname, '..');
 var _app = null;
+
+/**
+ * @description AWS configuration & initializating object
+ */
+var awsConfig = {
+    s3ImagesLocal: process.env.AWS_S3_IMAGESLOCAL,
+};
 
 /**
  * @description winston logging config
@@ -234,8 +242,26 @@ var getConfig = function () {
     return config;
 };
 
+// const imageFilter = (req, file, cb) => {
+//     // Accept images only
+//     if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
+//         req.fileValidationError = 'Only image files are allowed!';
+//         return cb(new Error('Only image files are allowed! [jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF], [Image size should be less than 2mb]'), false);
+//     }
+//     cb(null, true);
+// };
+
+// var storage = multer.diskStorage({
+//     destination: function (req, file, callback) {
+//         callback(null, `./public/${awsConfig.s3ImagesLocal}`);
+//     },
+//     filename: function (req, file, callback) {
+//         callback(null, file.originalname);
+//     }
+// });
+
 /**
- * @exports : Exports the Config Environment based Configuration
+ * @exports: Exports the Config Environment based Configuration
  */
 module.exports = {
 
@@ -248,7 +274,7 @@ module.exports = {
     set: function attach(
 		/**
 		 * @description env argument for initializing the environment specific configuration
-		 * @var {string} env : Environment varibale name
+		 * @var {string} env: Environment varibale name
 		 */
         env,
 
@@ -310,6 +336,17 @@ module.exports = {
             this.config.tanents = {};
 
             /**
+			 * @description Configuration seting the local directory for s3 folder
+			 */
+            if (!fs.existsSync("./public/" + this.config.awsConfig.s3ImagesLocal)) {
+                fs.mkdir("./public/" + this.config.awsConfig.s3ImagesLocal, (err, data) => {
+                    if (err) {
+                        console.log("Error while creating the S3 local folder for the project:", JSON.stringify(err));
+                    }
+                });
+            };
+
+            /**
 			 * @description Initializing & Updating AWS S3 Bucket, Configuration setting local directory for S3 Bucket folder
 			 */
             this.config.awsCredentials = {
@@ -317,14 +354,31 @@ module.exports = {
                 secretAccessKey: this.config.awsConfig.secretAccessKey,
                 region: this.config.awsConfig.region,
                 s3BucketName: this.config.awsConfig.s3BucketName,
+                s3ImagesLocal: this.config.awsConfig.s3ImagesLocal,
                 signatureVersion: "v4"
             };
 
+            this.config.awsS3Client = new AWS.S3({
+                accessKeyId: this.config.awsConfig.accessKeyId,
+                secretAccessKey: this.config.awsConfig.secretAccessKey,
+                region: this.config.awsConfig.region
+            });
+
+            // let options = { s3Client: this.config.awsS3Client };
+            // this.config.s3Client = s3.createClient(options);
 			/**
 			 * @description Notify user regarding current setup e.g. local, development or production
 			 */
             // this.config.loggers.log({ level: 'info', message: `Environment Set to:, ${this.ename}`});
             this.config.loggers.info("Environment Set to:", this.ename);
+
+            // this.config.upload = multer({
+            //     limits: {
+            //         fileSize: 2097152  // 2MB
+            //     },
+            //     fileFilter: imageFilter,
+            //     storage: storage
+            // });
 
 			/**
 			 * @description Require the database instance.

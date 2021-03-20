@@ -1,7 +1,10 @@
-const jwt                   = require('jsonwebtoken'),
-      message               = "Something went wrong, try again",
-      { upload, deleteImg } = require('../config/multer'),
-      unauthorize           = { success: false, statuscode: 401, message: "Unauthorized user" };
+const jwt = require('jsonwebtoken'),
+    message = "Something went wrong, try again",
+    fs = require('fs'),
+    { upload } = require('../config/multer'),
+    config = require('../config').get(),
+    { s3ImagesLocal } = config.awsCredentials,
+    unauthorize = { success: false, statuscode: 401, message: "Unauthorized user" };
 
 module.exports = {
     generateToken: (payload) => {
@@ -28,47 +31,30 @@ module.exports = {
         }
         catch (err) {
             return res.status(401).json({
-                auth      : false,
+                auth: false,
                 statuscode: 401,
-                message   : 'Failed to authenticate'
+                message: 'Failed to authenticate'
             });
         }
     },
 
-    uploadImg: (req, res, next) => {
-        try {
-            var singleUpload = upload.single('file');
+    storeImg: (req, res, next) => {
+        var singleUpload = upload.single('file');
 
-            singleUpload(req, res, (err, data) => {
-                if (err) {
-                    logger.error("error occur in uploadImg utility callback", err.message)
-                    return res.status(400).json({ message: err.message, statuscode: 400 })
-                }
-                else {
-                    if (req.optional && (req.file === undefined)) {
-                        return next();
-                    } else if (req.file === undefined) {
-                        logger.error("error occur in uploadImg utility in if condi undefined")
-                        return res.status(400).send({
-                            success   : false,
-                            statuscode: 400,
-                            message   : req.fileValidationError
-                        });
-                    }
-                    req.s3url = req.file.location
-                    return next();
-                }
-            })
-        } catch (err) {
-            logger.error("error occur in uploadImg utility catch block", err)
-            return res.status(400).json({ message: "Something went wrong", statuscode: 400 })
-        }
+        singleUpload(req, res, (err, data) => {
+            if (err) {
+                logger.error("error occur in uploadImg utility callback", err.message)
+                return res.status(400).json({ message: err.message, statuscode: 400 })
+            }
+            req.file = req.file.originalname
+            next();
+        })
     },
 
-    deleteImg: async (s3url) => {
-        return deleteImg(s3url, async (err, data) => {
-            if (err) logger.error("Some thing went wrong while deleting img from S3 Bucket", err)
-            else logger.info("Image deleted successfully", data)
-        })
+    deleteImg: (file) => {
+        fs.unlink(`./public/${s3ImagesLocal}/${file}`, (err) => {
+            if (err) logger.error("Failed to delete local image:" + err);
+            else logger.info('Successfully deleted local image');
+        });
     }
 }
