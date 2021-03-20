@@ -31,6 +31,10 @@ var coordinatorSchema = new Schema({
         trim    : true,
         required: true
     },
+    isDeleted: {
+        type   : Boolean,
+        default: false
+    },
 }, {
     timestamps: true
 })
@@ -87,21 +91,6 @@ module.exports = {
                 })
         } catch (err) {
             logger.error("error occur in update query model catch block")
-            return callback(message, null)
-        }
-    },
-
-    remove(coordinatorData, callback) {
-        try {
-            Coordinator.findByIdAndDelete(coordinatorData, (err, data) => {
-                if (err) {
-                    logger.error("error occur in remove query model callback")
-                    return callback(err, null)
-                }
-                return callback(null, data)
-            })
-        } catch (err) {
-            logger.error("error occur in remove query model catch block")
             return callback(message, null)
         }
     },

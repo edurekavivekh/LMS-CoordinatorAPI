@@ -9,8 +9,7 @@ var express = require('express'),
         val_user,
         val_objectId
     } = require('../../config/validator'),
-    validate = require('../middleware/validate').validate,
-    upload   = require('../../config/multer');
+    validate = require('../middleware/validate').validate;
 
 /**
  * Coordinator API's
@@ -33,7 +32,7 @@ routes.put('/lms-coordinator/update-coordinator/:coordinatorId'
     , verifyToken
     , controller.updateCoordinator);
 
-routes.delete('/lms-coordinator/remove-coordinator/:coordinatorId'
+routes.put('/lms-coordinator/remove-coordinator/:coordinatorId'
     , val_objectId('coordinatorId')
     , validate
     , verifyToken

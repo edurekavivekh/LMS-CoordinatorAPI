@@ -99,11 +99,12 @@ module.exports = {
         try {
             var coordinatorData = {
                 userId       : req.token.jti,
-                coordinatorId: req.params.coordinatorId
+                coordinatorId: req.params.coordinatorId,
+                data         : { isDeleted: true }
             },
                 response = {};
 
-            services.removeCoordinator(coordinatorData, (err, result) => {
+            services.updateCoordinator(coordinatorData, (err, result) => {
                 if (err) {
                     response.success    = false
                     response.statuscode = err.statuscode

@@ -57,7 +57,7 @@ module.exports = {
 
     updateCoordinator(coordinatorData, callback) {
         try {
-            model.findCoordinator({ _id: coordinatorData.coordinatorId }, (err, result) => {
+            model.findCoordinator({ $and: [{ _id: coordinatorData.coordinatorId }, { isDeleted: false }] }, (err, result) => {
                 if (err) {
                     logger.error("error occur in updateCoordinator service find query callback")
                     return callback({ message: message, statuscode: 400 }, null)
@@ -68,8 +68,9 @@ module.exports = {
                                 logger.error("error occur in updateCoordinator service callback")
                                 return callback({ message: message, statuscode: 400 }, null)
                             }
+                            let msg = result.isDeleted ? 'Removed successfully' : `Updated successfully`;
                             return callback(null, {
-                                message   : `Updated successfully`,
+                                message   : msg,
                                 statuscode: 200
                             })
                         })
@@ -82,37 +83,6 @@ module.exports = {
             })
         } catch (err) {
             logger.error("error occur in updateCoordinator service catch block")
-            return callback({ message: message, statuscode: 404 }, null)
-        }
-    },
-
-    removeCoordinator(coordinatorData, callback) {
-        try {
-            model.findCoordinator({ _id: coordinatorData.coordinatorId }, (err, result) => {
-                if (err) {
-                    logger.error("error occur in removeCoordinator service find query callback")
-                    return callback({ message: message, statuscode: 400 }, null)
-                } else {
-                    return result.length !== 0 ?
-                        model.removeCoordinator({ _id: coordinatorData.coordinatorId }, (err, result) => {
-                            if (err) {
-                                logger.error("error occur in removeCoordinator service callback")
-                                return callback({ message: message, statuscode: 400 }, null)
-                            }
-                            return callback(null, {
-                                message   : `Removed successfully`,
-                                statuscode: 200
-                            })
-                        })
-                        : 
-                        callback(null, {
-                            message   : `No [${coordinatorData.coordinatorId}] user found`,
-                            statuscode: 404
-                        })
-                }
-            })
-        } catch (err) {
-            logger.error("error occur in removeCoordinator service catch block")
             return callback({ message: message, statuscode: 404 }, null)
         }
     },
