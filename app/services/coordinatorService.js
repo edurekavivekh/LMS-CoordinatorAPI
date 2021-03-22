@@ -1,12 +1,12 @@
-var model           = require('../model'),
+var model = require('../model'),
     { uploadS3Img } = require('../../config/multer'),
-    { deleteImg }   = require('../../utility'),
-    message         = "Something went wrong";
+    { deleteImg } = require('../../utility'),
+    message = "Something went wrong";
 
 module.exports = {
     createCoordinator(coordinatorData, callback) {
         try {
-            model.findCoordinator({ emailId: coordinatorData.emailId }, (err, result) => {
+            model.findCoordinator({ $or: [{ emailId: coordinatorData.emailId }, { mobile: coordinatorData.mobile }] }, (err, result) => {
                 if (err) {
                     logger.error("error occur in createCoordinator service find query callback")
                     return callback({ message: message, statuscode: 400 }, null)
@@ -28,15 +28,16 @@ module.exports = {
                                     return callback({ message: message, statuscode: 400 }, null)
                                 }
                                 return callback(null, {
-                                    message   : `Created successfully`,
+                                    message: `Created successfully`,
                                     statuscode: 201
                                 })
                             })
                         })
                     } else {
+                        let val = result[0].emailId === coordinatorData.emailId ? result[0].emailId : result[0].mobile
                         filename !== null ? deleteImg(filename) : null;
                         return callback(null, {
-                            message   : `[${result[0].emailId}] user already exist`,
+                            message: `[${val}] user already exist`,
                             statuscode: 409
                         })
                     }
@@ -56,9 +57,9 @@ module.exports = {
                     return callback({ message: message, statuscode: 400 }, null)
                 }
                 return callback(null, {
-                    message   : `Successfully fetched all coordinators`,
+                    message: `Successfully fetched all coordinators`,
                     statuscode: 201,
-                    result    : result
+                    result: result
                 })
             })
         } catch (err) {
@@ -75,7 +76,7 @@ module.exports = {
                     return callback({ message: message, statuscode: 400 }, null)
                 } else {
                     if (result.length !== 0) {
-                        let keys     = Object.keys(coordinatorData.data);
+                        let keys = Object.keys(coordinatorData.data);
                         let filename = keys.includes("profileImg") ? coordinatorData.data["profileImg"] : null;
                         uploadS3Img(filename, (err, data) => {
                             if (err) {
@@ -93,14 +94,14 @@ module.exports = {
                                 }
                                 let msg = result.isDeleted ? 'Removed successfully' : `Updated successfully`;
                                 return callback(null, {
-                                    message   : msg,
+                                    message: msg,
                                     statuscode: 200
                                 })
                             })
                         })
                     } else {
                         return callback(null, {
-                            message   : `No [${coordinatorData.coordinatorId}] user found`,
+                            message: `No [${coordinatorData.coordinatorId}] user found`,
                             statuscode: 404
                         })
                     }
