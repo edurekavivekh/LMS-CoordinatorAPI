@@ -41,6 +41,11 @@
                 "tags"   : [
                     "Coordinator"
                 ],
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ],
                 "description": "Create new coordinator in the system",
                 "parameters" : [
                     {
