@@ -50,7 +50,7 @@ module.exports = {
 
     getCoordinators(coordinatorData, callback) {
         try {
-            model.findCoordinator(coordinatorData, (err, result) => {
+            model.getCoordinator(coordinatorData, (err, result) => {
                 if (err) {
                     logger.error("error occur in getCoordinators service callback")
                     return callback({ message: message, statuscode: 400 }, null)

@@ -1,7 +1,8 @@
 module.exports = {
     // coordinator
     createCoordinator: require('./coordinatorModel').create,
-    findCoordinator: require('./coordinatorModel').find,
+    getCoordinator   : require('./coordinatorModel').get,
+    findCoordinator  : require('./coordinatorModel').find,
     updateCoordinator: require('./coordinatorModel').update,
     removeCoordinator: require('./coordinatorModel').remove,
 }
