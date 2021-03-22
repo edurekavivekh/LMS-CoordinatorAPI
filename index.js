@@ -1,25 +1,30 @@
 require('dotenv').config();
-// require('./config/database/mongo-db-instance');
 
 const express     = require('express'),
       bodyParser  = require('body-parser'),
       morgan      = require('morgan'),
       cors        = require('cors'),
+      swagger_ui  = require('swagger-ui-express'),
       { success } = require("consola");
 
-const app        = express(),
-      configInit = require("./config/").set(process.env.NODE_ENV, app),
-      routes     = require('./app/routes'),
-      config     = require("./config/").get();
+const app         = express(),
+      configInit  = require("./config/").set(process.env.NODE_ENV, app),
+      routes      = require('./app/routes'),
+      swagger_doc = require('./app/lib/swagger-ui/api_docs'),
+      config      = require("./config/").get();
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 app.disable('x-powered-by');
-app.use(cors());
 app.use(express.static(__dirname + '/public'));
-
 app.use('/', routes);
+app.use('/coordinator/api_docs', swagger_ui.serve, swagger_ui.setup(swagger_doc));
+
+app.get('/', (req, res) => {
+    res.redirect('/coordinator/api_docs');
+});
 
 app.use('*/*', (req, res, next) => {
     res.status(404).send({

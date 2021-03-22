@@ -1,0 +1,133 @@
+{
+    "swagger": "2.0",
+    "info"   : {
+        "version"    : "1.0.0",
+        "title"      : "LMS-Coordinator App Swagger",
+        "description": "This is a LMS-Coordinator swagger to access rest API server ",
+        "license"    : {
+            "name": "MIT",
+            "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+        }
+    },
+    "host"    : "localhost:3000",
+    "basePath": "/",
+    "tags"    : [
+        {
+            "name"       : "Coordinator",
+            "description": "API's for Coordinator"
+        }
+    ],
+    "schemes": [
+        "http"
+    ],
+    "securityDefinitions": {
+        "api_key": {
+            "type"       : "apiKey",
+            "name"       : "x-access-token",
+            "in"         : "header",
+            "description": "authorization token"
+        }
+    },
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/coordinator/create": {
+            "post": {
+                "summary": "To create new coordinator",
+                "tags"   : [
+                    "Coordinator"
+                ],
+                "description": "Create new coordinator in the system",
+                "parameters" : [
+                    {
+                        "name"       : "file",
+                        "in"         : "formData",
+                        "type"       : "file",
+                        "description": "Coordinator profile image",
+                        "schema"     : {
+                            "$ref": "#/definitions/UploadImage"
+                        }
+                    },
+                    {
+                        "name"       : "name",
+                        "in"         : "formData",
+                        "required"   : true,
+                        "type"       : "string",
+                        "description": "Coordinator name"
+                    },
+                    {
+                        "name"       : "mobile",
+                        "in"         : "formData",
+                        "required"   : true,
+                        "type"       : "number",
+                        "description": "Coordinator mobile"
+                    },
+                    {
+                        "name"       : "emailId",
+                        "in"         : "formData",
+                        "required"   : true,
+                        "type"       : "string",
+                        "description": "Coordinator email id"
+                    }
+                ],
+                "produces": [
+                    "application/json",
+                    "multipart/form-data"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "New Coordinator created",
+                        "schema"     : {
+                            "$ref": "#/definitions/Coordinator"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "409": {
+                        "description": "Already exist"
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Coordinator": {
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "mobile": {
+                    "type": "number"
+                },
+                "emailId": {
+                    "type": "string"
+                },
+                "profileImg": {
+                    "type": "string"
+                }
+            }
+        },
+        "UploadImage": {
+            "properties": {
+                "profileImg": {
+                    "type"  : "string",
+                    "format": "file"
+                }
+            }
+        }
+    }
+}
