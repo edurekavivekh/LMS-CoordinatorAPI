@@ -1,5 +1,5 @@
 var express = require('express'),
-    routes  = express.Router(),
+    routes = express.Router(),
     {
         verifyToken,
         storeImg
@@ -25,6 +25,11 @@ routes.get('/coordinator/all-coordinators'
     , validate
     , verifyToken
     , controller.getCoordinators);
+
+routes.get('/coordinator/name-list'
+    , validate
+    , verifyToken
+    , controller.getCoordinatorsList);
 
 routes.put('/coordinator/:coordinatorId'
     , verifyToken

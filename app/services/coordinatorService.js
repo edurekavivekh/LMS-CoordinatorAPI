@@ -48,9 +48,9 @@ module.exports = {
         }
     },
 
-    getCoordinators(_coordinatorData, callback) {
+    getCoordinators(coordinatorData, callback) {
         try {
-            model.findCoordinator({ isDeleted: false }, (err, result) => {
+            model.findCoordinator(coordinatorData, (err, result) => {
                 if (err) {
                     logger.error("error occur in getCoordinators service callback")
                     return callback({ message: message, statuscode: 400 }, null)

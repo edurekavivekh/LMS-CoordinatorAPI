@@ -1,38 +1,38 @@
 var mongoose = require('mongoose'),
-    Schema   = mongoose.Schema,
-    message  = 'Something bad happaned';
+    Schema = mongoose.Schema,
+    message = 'Something bad happaned';
 
 var coordinatorSchema = new Schema({
     name: {
-        type    : String,
-        trim    : true,
+        type: String,
+        trim: true,
         required: true
     },
     mobile: {
-        type     : Number,
-        trim     : true,
-        unique   : true,
+        type: Number,
+        trim: true,
+        unique: true,
         minlength: 10,
         maxlength: 10,
-        required : true
+        required: true
     },
     emailId: {
-        type    : String,
-        trim    : true,
+        type: String,
+        trim: true,
         required: true
     },
     profileImg: {
-        type   : String,
-        trim   : true,
+        type: String,
+        trim: true,
         default: null
     },
     createdBy: {
-        type    : Number,
-        trim    : true,
+        type: Number,
+        trim: true,
         required: true
     },
     isDeleted: {
-        type   : Boolean,
+        type: Boolean,
         default: false
     },
 }, {
@@ -45,11 +45,11 @@ module.exports = {
     create(coordinatorData, callback) {
         try {
             var coordinator = new Coordinator({
-                name      : coordinatorData.name,
-                mobile    : coordinatorData.mobile,
-                emailId   : coordinatorData.emailId,
+                name: coordinatorData.name,
+                mobile: coordinatorData.mobile,
+                emailId: coordinatorData.emailId,
                 profileImg: coordinatorData.profileImg,
-                createdBy : coordinatorData.createdBy
+                createdBy: coordinatorData.createdBy
             })
 
             return coordinator.save()
@@ -66,7 +66,7 @@ module.exports = {
 
     find(coordinatorData, callback) {
         try {
-            Coordinator.find(coordinatorData, (err, data) => {
+            Coordinator.find(coordinatorData.query, coordinatorData.project, (err, data) => {
                 if (err) {
                     logger.error("error occur in find query model callback")
                     return callback(err, null)
