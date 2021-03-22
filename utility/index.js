@@ -1,10 +1,10 @@
-const jwt = require('jsonwebtoken'),
-    message = "Something went wrong, try again",
-    fs = require('fs'),
-    { upload } = require('../config/multer'),
-    config = require('../config').get(),
-    { s3ImagesLocal } = config.awsCredentials,
-    unauthorize = { success: false, statuscode: 401, message: "Unauthorized user" };
+const jwt               = require('jsonwebtoken'),
+      message           = "Something went wrong, try again",
+      fs                = require('fs'),
+      { upload }        = require('../config/multer'),
+      config            = require('../config').get(),
+      { s3ImagesLocal } = config.awsCredentials,
+      unauthorize       = { success: false, statuscode: 401, message: "Unauthorized user" };
 
 module.exports = {
     generateToken: (payload) => {
@@ -31,9 +31,9 @@ module.exports = {
         }
         catch (err) {
             return res.status(401).json({
-                auth: false,
+                auth      : false,
                 statuscode: 401,
-                message: 'Failed to authenticate'
+                message   : 'Failed to authenticate'
             });
         }
     },
@@ -50,7 +50,7 @@ module.exports = {
             if ([undefined, "", null].includes(req.file)) {
                 return next();
             }
-            req.file = req.file.originalname
+            req.file = req.file.filename
             next();
         })
     },

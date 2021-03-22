@@ -1,13 +1,12 @@
-const multer = require('multer'),
-    path = require('path'),
-    config = require('../../config').get(),
-    fs = require('fs'),
-    s3 = config.awsS3Client,
-    { s3BucketName, s3ImagesLocal } = config.awsCredentials;
+const multer                          = require('multer'),
+      path                            = require('path'),
+      config                          = require('../../config').get(),
+      fs                              = require('fs'),
+      s3                              = config.awsS3Client,
+      { s3BucketName, s3ImagesLocal } = config.awsCredentials;
 
 
 const imageFilter = (req, file, cb) => {
-    console.log("entered");
     // Accept images only
     if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
         req.fileValidationError = 'Only image files are allowed!';
@@ -18,7 +17,7 @@ const imageFilter = (req, file, cb) => {
 
 var upload = multer({
     fileFilter: imageFilter,
-    limits: {
+    limits    : {
         fileSize: 2097152  // 2MB
     },
     storage: multer.diskStorage({
@@ -26,7 +25,7 @@ var upload = multer({
             callback(null, `./public/${s3ImagesLocal}`);
         },
         filename: function (req, file, callback) {
-            callback(null, file.originalname);
+            callback(null, Date.now() + '-' + file.originalname);
         }
     })
 });
@@ -36,15 +35,15 @@ function uploadS3Img(file, callback) {
         return callback(null, false)
     }
     // Setting up S3 upload parameters
-    let filepath = `./public/${s3ImagesLocal}/${file}`;
-    let img = fs.createReadStream(filepath)
-    var album = encodeURIComponent('coordinator-profile-image');
-    const key = `${album}/${process.env.NODE_ENV}/${Date.now().toString()}${path.extname(file)}`
+    let   filepath = `./public/${s3ImagesLocal}/${file}`;
+    let   img      = fs.createReadStream(filepath)
+    var   album    = encodeURIComponent('coordinator-profile-image');
+    const key      = `${album}/${process.env.NODE_ENV}/${Date.now().toString()}${path.extname(file)}`
 
     const params = {
         Bucket: s3BucketName,
-        Key: key,
-        Body: img
+        Key   : key,
+        Body  : img
     };
     // Uploading files to the bucket
     s3.upload(params, (err, data) => {
