@@ -56,7 +56,7 @@ module.exports = {
     },
 
     deleteImg: (file) => {
-        fs.unlink(`./public/${s3ImagesLocal}/${file}`, (err) => {
+        fs.unlink(`./${s3ImagesLocal}/${file}`, (err) => {
             if (err) logger.error("Failed to delete local image:" + err);
             else logger.info('Successfully deleted local image');
         });

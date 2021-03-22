@@ -22,7 +22,7 @@ var upload = multer({
     },
     storage: multer.diskStorage({
         destination: function (req, file, callback) {
-            callback(null, `./public/${s3ImagesLocal}`);
+            callback(null, `./${s3ImagesLocal}`);
         },
         filename: function (req, file, callback) {
             callback(null, Date.now() + '-' + file.originalname);
@@ -35,7 +35,7 @@ function uploadS3Img(file, callback) {
         return callback(null, false)
     }
     // Setting up S3 upload parameters
-    let   filepath = `./public/${s3ImagesLocal}/${file}`;
+    let   filepath = `./${s3ImagesLocal}/${file}`;
     let   img      = fs.createReadStream(filepath)
     var   album    = encodeURIComponent('coordinator-profile-image');
     const key      = `${album}/${process.env.NODE_ENV}/${Date.now().toString()}${path.extname(file)}`

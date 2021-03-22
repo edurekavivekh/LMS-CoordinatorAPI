@@ -9,20 +9,20 @@
  */
 ;
 var
-    fs = require("fs"),
-    path = require("path"),
-    fse = require("fs-extra"),
-    clc = require('cli-color'),
-    winston = require("winston"),
-    dateFormat = require('dateformat'),
-    AWS = require('aws-sdk'),
+    fs             = require("fs"),
+    path           = require("path"),
+    fse            = require("fs-extra"),
+    clc            = require('cli-color'),
+    winston        = require("winston"),
+    dateFormat     = require('dateformat'),
+    AWS            = require('aws-sdk'),
     expressWinston = require("express-winston"),
     config,
     configTanent,
     _app;
 
 var PROJECT_ROOT = path.join(__dirname, '..');
-var _app = null;
+var _app         = null;
 
 /**
  * @description AWS configuration & initializating object
@@ -37,24 +37,24 @@ var awsConfig = {
 var winstonConfig = {
     config: {
         levels: {
-            error: 0,
-            warn: 1,
-            info: 2,
-            debug: 3,
-            trace: 4,
-            data: 5,
+            error  : 0,
+            warn   : 1,
+            info   : 2,
+            debug  : 3,
+            trace  : 4,
+            data   : 5,
             verbose: 6,
-            silly: 7
+            silly  : 7
         },
         colors: {
-            error: 'red',
-            warn: 'yellow',
-            info: 'green',
-            debug: 'cyan',
-            trace: 'grey',
-            data: 'magenta',
+            error  : 'red',
+            warn   : 'yellow',
+            info   : 'green',
+            debug  : 'cyan',
+            trace  : 'grey',
+            data   : 'magenta',
             verbose: 'cyan',
-            silly: 'magenta'
+            silly  : 'magenta'
         }
     },
     logDir: path.join(process.env.PROJECT_WINSTON_LOG_DIR, process.env.PROJECT_WINSTON_LOG_FOLDER)
@@ -85,10 +85,10 @@ if (!fs.existsSync(winstonConfig.logDir)) { // Create the directory if it does n
  * @description Defines the color for console
  */
 var consoleColorMap = {
-    "log": clc.blue,
-    "warn": clc.yellow,
+    "log"  : clc.blue,
+    "warn" : clc.yellow,
     "error": clc.red.bold,
-    "info": clc.cyan
+    "info" : clc.cyan
 };
 
 /**
@@ -96,8 +96,8 @@ var consoleColorMap = {
  * @description Adds the timestamp & colors to the console function
  */
 ["log", "warn", "error", "info"].forEach(function (method) {
-    var oldMethod = console[method].bind(console);
-    console[method] = function () {
+    var     oldMethod = console[method].bind(console);
+    console[method]   = function () {
         var res = [];
         for (var x in arguments) {
             if (arguments.hasOwnProperty(x))
@@ -163,10 +163,10 @@ function _attachExpressLogger(config) {
         expressWinston.logger({
             transports: [
                 new winston.transports.File({
-                    'level': logLevels.file,
+                    'level'      : logLevels.file,
                     'prettyPrint': true,
-                    'filename': path.join(process.env.PROJECT_EXPRESS_LOG_DIR, process.env.PROJECT_EXPRESS_LOG_FILE),
-                    'timestamp': true
+                    'filename'   : path.join(process.env.PROJECT_EXPRESS_LOG_DIR, process.env.PROJECT_EXPRESS_LOG_FILE),
+                    'timestamp'  : true
                 })
             ]
         })
@@ -179,7 +179,7 @@ function _attachExpressLogger(config) {
  * @param {any} config config Consists of the environment details of the server.
  */
 function _attachExpressErrorLogger(config) {
-    var server = _app;
+    var server    = _app;
     var logLevels = winstonConfig.config.levels;
     if (!config.isProduction) {
         logLevels.console = "info,silly,warning,debug";
@@ -188,18 +188,18 @@ function _attachExpressErrorLogger(config) {
         expressWinston.errorLogger({
             transports: [
                 new winston.transports.Console({
-                    'colorize': true,
+                    'colorize'   : true,
                     'prettyPrint': true,
-                    'label': 'express.error',
-                    'eol': '\n',
-                    'level': logLevels.console
+                    'label'      : 'express.error',
+                    'eol'        : '\n',
+                    'level'      : logLevels.console
                 }),
                 new winston.transports.File({
-                    'level': logLevels.file,
-                    'eol': '\n',
+                    'level'      : logLevels.file,
+                    'eol'        : '\n',
                     'prettyPrint': true,
-                    'filename': process.env.PROJECT_EXPRESS_LOG_PATH,
-                    'timestamp': true
+                    'filename'   : process.env.PROJECT_EXPRESS_LOG_PATH,
+                    'timestamp'  : true
                 })
             ]
         })
@@ -212,16 +212,16 @@ function _attachExpressErrorLogger(config) {
 function getStackInfo(stackIndex) {
     var stacklist = (new Error()).stack.split('\n').slice(3); var stackReg = /at\s+(.*)\s+\((.*):(\d*):(\d*)\)/gi;
     var stackReg2 = /at\s+()(.*):(\d*):(\d*)/gi;
-    var s = stacklist[stackIndex] || stacklist[0];
-    var sp = stackReg.exec(s) || stackReg2.exec(s);
+    var s         = stacklist[stackIndex] || stacklist[0];
+    var sp        = stackReg.exec(s) || stackReg2.exec(s);
     if (sp && sp.length === 5) {
         return {
-            method: sp[1],
+            method      : sp[1],
             relativePath: path.relative(PROJECT_ROOT, sp[2]),
-            line: sp[3],
-            pos: sp[4],
-            file: path.basename(sp[2]),
-            stack: stacklist.join('\n')
+            line        : sp[3],
+            pos         : sp[4],
+            file        : path.basename(sp[2]),
+            stack       : stacklist.join('\n')
         };
     }
 };
@@ -241,24 +241,6 @@ var setConfig = function (obj) {
 var getConfig = function () {
     return config;
 };
-
-// const imageFilter = (req, file, cb) => {
-//     // Accept images only
-//     if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
-//         req.fileValidationError = 'Only image files are allowed!';
-//         return cb(new Error('Only image files are allowed! [jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF], [Image size should be less than 2mb]'), false);
-//     }
-//     cb(null, true);
-// };
-
-// var storage = multer.diskStorage({
-//     destination: function (req, file, callback) {
-//         callback(null, `./public/${awsConfig.s3ImagesLocal}`);
-//     },
-//     filename: function (req, file, callback) {
-//         callback(null, file.originalname);
-//     }
-// });
 
 /**
  * @exports: Exports the Config Environment based Configuration
@@ -338,8 +320,8 @@ module.exports = {
             /**
 			 * @description Configuration seting the local directory for s3 folder
 			 */
-            if (!fs.existsSync("./public/" + this.config.awsConfig.s3ImagesLocal)) {
-                fs.mkdir("./public/" + this.config.awsConfig.s3ImagesLocal, (err, data) => {
+            if (!fs.existsSync("./" + this.config.awsConfig.s3ImagesLocal)) {
+                fs.mkdir(this.config.awsConfig.s3ImagesLocal, (err, data) => {
                     if (err) {
                         console.log("Error while creating the S3 local folder for the project:", JSON.stringify(err));
                     }
@@ -350,35 +332,25 @@ module.exports = {
 			 * @description Initializing & Updating AWS S3 Bucket, Configuration setting local directory for S3 Bucket folder
 			 */
             this.config.awsCredentials = {
-                accessKeyId: this.config.awsConfig.accessKeyId,
-                secretAccessKey: this.config.awsConfig.secretAccessKey,
-                region: this.config.awsConfig.region,
-                s3BucketName: this.config.awsConfig.s3BucketName,
-                s3ImagesLocal: this.config.awsConfig.s3ImagesLocal,
+                accessKeyId     : this.config.awsConfig.accessKeyId,
+                secretAccessKey : this.config.awsConfig.secretAccessKey,
+                region          : this.config.awsConfig.region,
+                s3BucketName    : this.config.awsConfig.s3BucketName,
+                s3ImagesLocal   : this.config.awsConfig.s3ImagesLocal,
                 signatureVersion: "v4"
             };
 
             this.config.awsS3Client = new AWS.S3({
-                accessKeyId: this.config.awsConfig.accessKeyId,
+                accessKeyId    : this.config.awsConfig.accessKeyId,
                 secretAccessKey: this.config.awsConfig.secretAccessKey,
-                region: this.config.awsConfig.region
+                region         : this.config.awsConfig.region
             });
 
-            // let options = { s3Client: this.config.awsS3Client };
-            // this.config.s3Client = s3.createClient(options);
 			/**
 			 * @description Notify user regarding current setup e.g. local, development or production
 			 */
             // this.config.loggers.log({ level: 'info', message: `Environment Set to:, ${this.ename}`});
             this.config.loggers.info("Environment Set to:", this.ename);
-
-            // this.config.upload = multer({
-            //     limits: {
-            //         fileSize: 2097152  // 2MB
-            //     },
-            //     fileFilter: imageFilter,
-            //     storage: storage
-            // });
 
 			/**
 			 * @description Require the database instance.
