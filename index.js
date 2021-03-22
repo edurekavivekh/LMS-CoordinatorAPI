@@ -30,10 +30,8 @@ app.use('*/*', (req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-    console.log(err);
-
     if (!err) return next();
-
+    logger.error("Internal server error", err)
     res.status(500).send({
         error: {
             success   : false,

@@ -7,6 +7,7 @@ const multer = require('multer'),
 
 
 const imageFilter = (req, file, cb) => {
+    console.log("entered");
     // Accept images only
     if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
         req.fileValidationError = 'Only image files are allowed!';
@@ -16,10 +17,10 @@ const imageFilter = (req, file, cb) => {
 };
 
 var upload = multer({
+    fileFilter: imageFilter,
     limits: {
         fileSize: 2097152  // 2MB
     },
-    fileFilter: imageFilter,
     storage: multer.diskStorage({
         destination: function (req, file, callback) {
             callback(null, `./public/${s3ImagesLocal}`);
@@ -31,6 +32,9 @@ var upload = multer({
 });
 
 function uploadS3Img(file, callback) {
+    if ([undefined, "", null].includes(file)) {
+        return callback(null, false)
+    }
     // Setting up S3 upload parameters
     let filepath = `./public/${s3ImagesLocal}/${file}`;
     let img = fs.createReadStream(filepath)
@@ -45,10 +49,10 @@ function uploadS3Img(file, callback) {
     // Uploading files to the bucket
     s3.upload(params, (err, data) => {
         if (err) {
-            logger.error("Image upload failed", err)
+            logger.error("Image upload to s3 failed", err)
             return callback(err, null)
         }
-        logger.info("Image uploaded succesfully");
+        logger.info("Image uploaded succesfully to s3");
         return callback(null, data.Location)
     })
 };

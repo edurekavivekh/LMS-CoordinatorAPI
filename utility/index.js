@@ -46,6 +46,10 @@ module.exports = {
                 logger.error("error occur in uploadImg utility callback", err.message)
                 return res.status(400).json({ message: err.message, statuscode: 400 })
             }
+
+            if ([undefined, "", null].includes(req.file)) {
+                return next();
+            }
             req.file = req.file.originalname
             next();
         })

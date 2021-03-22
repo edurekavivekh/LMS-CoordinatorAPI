@@ -1,8 +1,7 @@
 var express = require('express'),
-    routes = express.Router(),
+    routes  = express.Router(),
     {
         verifyToken,
-        // upload,
         storeImg
     } = require('../../utility'),
     controller = require('../controller'),
@@ -11,8 +10,6 @@ var express = require('express'),
         val_objectId
     } = require('../../config/validator'),
     validate = require('../middleware/validate').validate;
-    // config = require('../../config').get(),
-    // upload = config.upload;
 
 /**
  * Coordinator API's
@@ -30,9 +27,10 @@ routes.get('/coordinator/all-coordinators'
     , controller.getCoordinators);
 
 routes.put('/coordinator/:coordinatorId'
+    , verifyToken
+    , storeImg
     , val_user(true)
     , validate
-    , verifyToken
     , controller.updateCoordinator);
 
 routes.put('/coordinator/remove/:coordinatorId'

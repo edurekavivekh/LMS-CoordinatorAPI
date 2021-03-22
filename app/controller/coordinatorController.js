@@ -7,7 +7,7 @@ module.exports = {
                 name      : req.body.name,
                 mobile    : req.body.mobile,
                 emailId   : req.body.emailId,
-                profileImg: req.file,
+                profileImg: req.file || null,
                 createdBy : req.token.jti
             },
                 response = {};
@@ -73,6 +73,8 @@ module.exports = {
             for (var i = 0; i < keys.length; i++) {
                 coordinatorData.data[keys[i]] = req.body[keys[i]]
             }
+
+            if (req.file) coordinatorData.data["profileImg"] = req.file;
 
             services.updateCoordinator(coordinatorData, (err, result) => {
                 if (err) {
