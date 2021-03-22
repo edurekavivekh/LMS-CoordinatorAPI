@@ -107,6 +107,70 @@
                     }
                 }
             }
+        },
+        "/coordinator/{coordinatorId}": {
+            "put": {
+                "summary": "Update coordinator's details",
+                "tags"   : [
+                    "Coordinator"
+                ],
+                "description": "To update coordinator details",
+                "parameters" : [
+                    {
+                        "name"       : "coordinatorId",
+                        "in"         : "path",
+                        "required"   : true,
+                        "description": "Coordinator mongoId to update details"
+                    },
+                    {
+                        "name"       : "file",
+                        "in"         : "formData",
+                        "type"       : "file",
+                        "description": "Coordinator profile image",
+                        "schema"     : {
+                            "$ref": "#/definitions/UploadImage"
+                        }
+                    },
+                    {
+                        "name"       : "name",
+                        "in"         : "formData",
+                        "type"       : "string",
+                        "description": "Coordinator name"
+                    },
+                    {
+                        "name"       : "mobile",
+                        "in"         : "formData",
+                        "type"       : "number",
+                        "description": "Coordinator mobile"
+                    },
+                    {
+                        "name"       : "emailId",
+                        "in"         : "formData",
+                        "type"       : "string",
+                        "description": "Coordinator email id"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Updated successfully"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
         }
     },
     "definitions": {
