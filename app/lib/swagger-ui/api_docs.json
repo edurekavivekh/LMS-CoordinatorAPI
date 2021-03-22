@@ -114,6 +114,11 @@
                 "tags"   : [
                     "Coordinator"
                 ],
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ],
                 "description": "To update coordinator details",
                 "parameters" : [
                     {
