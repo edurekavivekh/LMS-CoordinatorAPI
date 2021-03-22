@@ -8,7 +8,6 @@ module.exports = {
             .exists()
             .optional(optional ? true : false)
             .notEmpty().withMessage(`Name is a required field`)
-            // .matches(/^([a-zA-Z]+|[a-zA-Z]+\s{1}[a-zA-Z]{1,}|[a-zA-Z]+\s{1}[a-zA-Z]{3,}\s{1}[a-zA-Z]{1,})$/)
             .matches(/^[a-zA-Z\. ]+$/)
             .withMessage(`Name should contain only alphabets`)
             .isLength({ min: 3 }).withMessage(`Name must at least 3 character`)
