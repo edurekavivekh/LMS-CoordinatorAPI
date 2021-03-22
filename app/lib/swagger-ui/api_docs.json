@@ -176,6 +176,48 @@
                     }
                 }
             }
+        },
+        "/coordinator/remove/{coordinatorId}": {
+            "put": {
+                "summary": "To remove coordinator",
+                "tags"   : [
+                    "Coordinator"
+                ],
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ],
+                "description": "To remove coordinator",
+                "parameters" : [
+                    {
+                        "name"       : "coordinatorId",
+                        "in"         : "path",
+                        "required"   : true,
+                        "description": "Coordinator mongoId"
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Removed successfully"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
         }
     },
     "definitions": {
