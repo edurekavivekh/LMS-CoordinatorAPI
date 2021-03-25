@@ -41,12 +41,12 @@ function uploadS3Img(file, callback) {
     const key      = `${album}/${process.env.NODE_ENV}/${Date.now().toString()}${path.extname(file)}`
 
     const params = {
-        acl   : 'public-read',
+        ACL   : "public-read",
         Bucket: s3BucketName,
         Key   : key,
         Body  : img
     };
-    // Uploading files to the bucket
+    // Uploading files to the bucket    
     s3.upload(params, (err, data) => {
         if (err) {
             logger.error("Image upload to s3 failed", err)
