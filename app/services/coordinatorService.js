@@ -6,42 +6,26 @@ var model = require('../model'),
 module.exports = {
     createCoordinator(coordinatorData, callback) {
         try {
-            model.findCoordinator({ $or: [{ emailId: coordinatorData.emailId }, { mobile: coordinatorData.mobile }] }, (err, result) => {
+            let filename = coordinatorData.profileImg;
+            uploadS3Img(coordinatorData.profileImg, (err, data) => {
                 if (err) {
-                    logger.error("error occur in createCoordinator service find query callback")
+                    logger.error("error occur while uploading user img in createCoordinator service")
                     return callback({ message: message, statuscode: 400 }, null)
-                } else {
-                    let filename = coordinatorData.profileImg;
-                    if (result.length === 0) {
-                        uploadS3Img(coordinatorData.profileImg, (err, data) => {
-                            if (err) {
-                                logger.error("error occur while uploading user img in createCoordinator service")
-                                return callback({ message: message, statuscode: 400 }, null)
-                            }
-                            if (data) {
-                                coordinatorData.profileImg = data;
-                                deleteImg(filename)
-                            }
-                            model.createCoordinator(coordinatorData, (err, result) => {
-                                if (err) {
-                                    logger.error("error occur in createCoordinator service callback")
-                                    return callback({ message: message, statuscode: 400 }, null)
-                                }
-                                return callback(null, {
-                                    message: `Created successfully`,
-                                    statuscode: 201
-                                })
-                            })
-                        })
-                    } else {
-                        let val = result[0].emailId === coordinatorData.emailId ? result[0].emailId : result[0].mobile
-                        filename !== null ? deleteImg(filename) : null;
-                        return callback(null, {
-                            message: `[${val}] user already exist`,
-                            statuscode: 409
-                        })
-                    }
                 }
+                if (data) {
+                    coordinatorData.profileImg = data;
+                    deleteImg(filename)
+                }
+                model.createCoordinator(coordinatorData, (err, result) => {
+                    if (err) {
+                        logger.error("error occur in createCoordinator service callback")
+                        return callback({ message: message, statuscode: 400 }, null)
+                    }
+                    return callback(null, {
+                        message: `Created successfully`,
+                        statuscode: 201
+                    })
+                })
             })
         } catch (err) {
             logger.error("error occur in createCoordinator service catch block")

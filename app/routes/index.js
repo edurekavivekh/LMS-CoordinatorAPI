@@ -2,7 +2,8 @@ var express = require('express'),
     routes = express.Router(),
     {
         verifyToken,
-        storeImg
+        storeImg,
+        checkUserAlreadyExist
     } = require('../../utility'),
     controller = require('../controller'),
     {
@@ -19,6 +20,7 @@ routes.post('/coordinator/create'
     , storeImg
     , val_user(false)
     , validate
+    , checkUserAlreadyExist
     , controller.createCoordinator);
 
 routes.get('/coordinator/all-coordinators'
@@ -36,6 +38,7 @@ routes.put('/coordinator/:coordinatorId'
     , storeImg
     , val_user(true)
     , validate
+    , checkUserAlreadyExist
     , controller.updateCoordinator);
 
 routes.put('/coordinator/remove/:coordinatorId'

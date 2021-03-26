@@ -41,7 +41,7 @@ function uploadS3Img(file, callback) {
     const key      = `${album}/${process.env.NODE_ENV}/${Date.now().toString()}${path.extname(file)}`
 
     const params = {
-        ACL   : "public-read",
+        // ACL   : "public-read",
         Bucket: s3BucketName,
         Key   : key,
         Body  : img
