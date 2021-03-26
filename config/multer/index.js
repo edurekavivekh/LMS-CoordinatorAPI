@@ -8,9 +8,9 @@ const multer                          = require('multer'),
 
 const imageFilter = (req, file, cb) => {
     // Accept images only
-    if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
+    if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG)$/)) {
         req.fileValidationError = 'Only image files are allowed!';
-        return cb(new Error('Only image files are allowed! [jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF], [Image size should be less than 2mb]'), false);
+        return cb(new Error('Only image files are allowed! [jpg|JPG|jpeg|JPEG], [Image size should be less than 2mb]'), false);
     }
     cb(null, true);
 };
@@ -41,10 +41,10 @@ function uploadS3Img(file, callback) {
     const key      = `${album}/${process.env.NODE_ENV}/${Date.now().toString()}${path.extname(file)}`
 
     const params = {
-        // ACL   : "public-read",
         Bucket: s3BucketName,
         Key   : key,
-        Body  : img
+        Body  : img,
+        ContentType: 'image/jpg' || 'image/jpeg'
     };
     // Uploading files to the bucket    
     s3.upload(params, (err, data) => {
