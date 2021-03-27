@@ -10,7 +10,7 @@ const imageFilter = (req, file, cb) => {
     // Accept images only
     if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|svg|SVG)$/)) {
         req.fileValidationError = 'Only image files are allowed!';
-        return cb(new Error('Only image files are allowed! [jpg|JPG|jpeg|JPEG|png|PNG|svg|SVG], [Image size should be less than 2mb]'), false);
+        return cb(new Error('Only image files are allowed! [jpg|JPG|jpeg|JPEG|png|PNG|svg|SVG], [Image size should be less than 3mb]'), false);
     }
     cb(null, true);
 };
@@ -18,7 +18,7 @@ const imageFilter = (req, file, cb) => {
 var upload = multer({
     fileFilter: imageFilter,
     limits    : {
-        fileSize: 2097152  // 2MB
+        fileSize: 3145728  // 3MB
     },
     storage: multer.diskStorage({
         destination: function (req, file, callback) {
